@@ -2,7 +2,6 @@
 """
 Deletion-resilient hypermedia pagination
 """
-
 import csv
 import math
 from typing import List, Dict
@@ -29,7 +28,15 @@ class Server:
         return self.__dataset
 
     def indexed_dataset(self) -> Dict[int, List]:
-        """Dataset indexed by sorting position, starting at 0
+        """
+        Returns hypermedia information for a given index.
+
+        Args:
+            index (int): The 0-indexed position.
+            page_size (int): The number of items per page.
+
+        Returns:
+            dict: A dictionary with hypermedia information.
         """
         if self.__indexed_dataset is None:
             dataset = self.dataset()
@@ -40,39 +47,31 @@ class Server:
         return self.__indexed_dataset
 
     def get_hyper_index(self, index: int = None, page_size: int = 10) -> Dict:
-            """
-            Returns hypermedia information for a given index.
+        """ Returns a dictionary containing hypermedia information """
+        assert isinstance(index, int) and index >= 0
+        assert isinstance(page_size, int) and page_size > 0
 
-            Args:
-                index (int): The 0-indexed position.
-                page_size (int): The number of items per page.
+        dataset = self.indexed_dataset()
+        total_items = len(dataset)
 
-            Returns:
-                dict: A dictionary with hypermedia information.
-            """
-            assert isinstance(index, int) and index >= 0
-            assert isinstance(page_size, int) and page_size > 0
+        # Calculate the current start index
+        start_index = index * page_size
+        end_index = start_index + page_size
 
-            dataset = self.indexed_dataset()
-            total_items = len(dataset)
+        # Ensure the start index is within bounds
+        if start_index >= total_items:
+            start_index = total_items - 1
 
-            # Calculate the current start index
-            start_index = index * page_size
-            end_index = start_index + page_size
+        # Retrieve data for the current page
+        data = [dataset[i] for i in range(start_index, min(
+            end_index, total_items))]
 
-            # Ensure the start index is within bounds
-            if start_index >= total_items:
-                start_index = total_items - 1
+        # Calculate the next index
+        next_index = min(end_index, total_items)
 
-            # Retrieve data for the current page
-            data = [dataset[i] for i in range(start_index, min(end_index, total_items))]
-
-            # Calculate the next index
-            next_index = min(end_index, total_items)
-
-            return {
-                'index': start_index,
-                'data': data,
-                'page_size': page_size,
-                'next_index': next_index
-            }
+        return {
+            'index': start_index,
+            'data': data,
+            'page_size': page_size,
+            'next_index': next_index
+        }
