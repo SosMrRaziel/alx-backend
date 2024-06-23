@@ -6,6 +6,7 @@ import math
 from typing import List, Tuple
 # index_range = __import__('0-simple_helper_function').index_range
 
+
 class Server:
     """Server class to paginate a database of popular baby names.
     """
@@ -27,7 +28,8 @@ class Server:
 
     def get_page(self, page: int = 1, page_size: int = 10) -> List[List]:
         """
-        Returns the appropriate page of the dataset based on the given page and page size.
+        Returns the appropriate page of the dataset
+        based on the given page and page size.
 
         Args:
             page (int): The 1-indexed page number.
@@ -41,7 +43,8 @@ class Server:
 
         start, end = index_range(page, page_size)
         return self.dataset()[start:end]
-    
+
+
 def index_range(page: int, page_size: int) -> Tuple[int, int]:
     """
     Returns a tuple containing the start
