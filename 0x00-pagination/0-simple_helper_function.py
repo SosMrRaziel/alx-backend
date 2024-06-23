@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+""" Module for task 0 """
+
 from typing import Tuple
 
 
@@ -15,4 +17,9 @@ def index_range(page: int, page_size: int) -> Tuple[int, int]:
         tuple[int, int]: A tuple with the start and end indices.
     """
 
-    return ((page - 1) * page_size, page * page_size)
+    if page <= 0 or page_size <= 0:
+        return (0, 0)
+    start_index = (page - 1) * page_size
+    end_index = start_index + page_size
+
+    return start_index, end_index
