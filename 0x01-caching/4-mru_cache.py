@@ -1,33 +1,33 @@
 #!/usr/bin/python3
-""" a class LRUCache that inherits from BaseCaching and is a caching system """
+""" class MRUCache that inherits from BaseCaching and is a caching system """
 BaseCaching = __import__('base_caching').BaseCaching
 
 
-class LRUCache(BaseCaching):
-    """ LRUCache defines:
+class MRUCache(BaseCaching):
+    """ MRUCache defines:
       - Inherits from BaseCaching
       - Caching system
     """
 
     def __init__(self):
         """
-        Initialize the LRU cache.
+        Initialize the MRU cache.
         """
         super().__init__()
         self.usage_order = []  # To track the order of item usage
 
     def put(self, key, item):
         """
-        Add an item to the cache using LRU algorithm.
+        Add an item to the cache using MRU algorithm.
         If key or item is None, do nothing.
-        If the cache is full, discard the least recently used item.
+        If the cache is full, discard the most recently used item (MRU).
         """
         if key is not None and item is not None:
-            if len(self.cache_data) >= self.MAX_ITEMS:
-                # Discard the least recently used item
-                lru_key = self.usage_order.pop(0)
-                print("DISCARD: {}".format(lru_key))
-                del self.cache_data[lru_key]
+            if len(self.cache_data) >= BaseCaching.MAX_ITEMS:
+                # Discard the most recently used item (MRU)
+                mru_key = self.usage_order.pop()
+                print("DISCARD: {}".format(mru_key))
+                del self.cache_data[mru_key]
             self.cache_data[key] = item
             self.usage_order.append(key)
 
